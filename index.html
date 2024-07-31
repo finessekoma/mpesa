@@ -76,57 +76,16 @@
             color: #333;
         }
     </style>
-    <script>
-        function showLoading() {
-            document.getElementById('loading').style.display = 'flex';
-        }
-
-        function checkTransactionStatus(checkoutRequestID) {
-            fetch('checkTransactionStatus.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ checkoutRequestID })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'completed') {
-                    window.location.href = 'index.html';
-                } else if (data.errorMessage) {
-                    alert('Transaction failed. Please try again. ' + data.errorMessage);
-                    document.getElementById('loading').style.display = 'none';
-                } else {
-                    setTimeout(() => checkTransactionStatus(checkoutRequestID), 5000);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            fetch('getCheckoutRequestID.php')
-                .then(response => response.json())
-                .then(data => {
-                    const checkoutRequestID = data.CheckoutRequestID;
-                    if (checkoutRequestID) {
-                        checkTransactionStatus(checkoutRequestID);
-                    }
-                });
-        });
-    </script>
 </head>
 <body>
     <section>
         <form action="stkpush.php" method="post" onsubmit="showLoading()">
             <label for="phonenumber">Phone Number</label>
             <input type="tel" id="phonenumber" name="phonenumber" pattern="2547[0-9]{8}" placeholder="2547XXXXXXXX" required>
-            
             <label for="amount">Amount</label>
             <input type="number" id="amount" name="amount" placeholder="Amount" required>
-            
             <button type="submit">Submit</button>
         </form>
     </section>
-
 </body>
 </html>
